@@ -1,0 +1,19 @@
+Combined Python 2/3 for Vim
+---------------------------
+
+Fork of the python.vim by Dmitry Vasiliev and Neil Schemenauer.
+
+Features
+--------
+
+- Syntax highlighting
+- Supports 2.x and 3.x features.
+
+Installation
+------------
+
+If you don't have a preferred installation method, I recommend installing
+pathogen.vim, and then simply copy and paste:
+
+   cd ~/.vim/bundle
+   git clone git://github.com/mitsuhiko/vim-python-combined.git
