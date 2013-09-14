@@ -113,9 +113,13 @@ function! GetPythonPEPIndent(lnum)
             else
                 return indent(parlnum) + &shiftwidth
             endif
-        else
-            return parcol
+        elseif a:lnum - 1 != parlnum
+            let lastindent = match(getline(a:lnum - 1), '\S')
+            if lastindent != -1 && lastindent < parcol
+                return lastindent
+            endif
         endif
+        return parcol
     endif
 
     " Examine this line
