@@ -160,7 +160,7 @@ function! GetPythonPEPIndent(lnum)
   " If this line is explicitly joined, try to find an indentation that looks
   " good.
   if pline =~ '\\$'
-    let compound_statement = '^\s*\(if\|while\|for\s.*\sin\|except\)\s*'
+    let compound_statement = '^\s*\(if\|while\|from\|import\|for\s.*\sin\|except\)\s*'
     let maybe_indent = matchend(getline(sslnum), compound_statement)
     if maybe_indent != -1
       return maybe_indent
