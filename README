@@ -8,6 +8,7 @@ Features
 
 - Syntax highlighting
 - Supports 2.x and 3.x features.
+- PEP8 inspired indentation with extra handling.
 
 Installation
 ------------
