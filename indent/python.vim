@@ -95,6 +95,7 @@ function! s:BlockStarter(lnum, block_start_re)
 endfunction
 
 function! GetPythonPEPIndent(lnum)
+  let scol = col('.')
 
   " First line has indent 0
   if a:lnum == 1
@@ -106,7 +107,14 @@ function! GetPythonPEPIndent(lnum)
   let parlnum = s:SearchParensPair()
   if parlnum > 0
     let parcol = col('.')
-    let closing_paren = match(getline(a:lnum), '^\s*[])}]') != -1
+    let matches = matchlist(getline(a:lnum), '^\(\s*\)[])}]')
+    if len(matches) == 0
+      let closing_paren = 0
+      let closing_paren_pos = 0
+    else
+      let closing_paren = 1
+      let closing_paren_pos = len(matches[1])
+    endif
     if match(getline(parlnum), '[([{]\s*$', parcol - 1) != -1
       if closing_paren
         return indent(parlnum)
@@ -114,7 +122,7 @@ function! GetPythonPEPIndent(lnum)
         return indent(parlnum) + &shiftwidth
       endif
     elseif a:lnum - 1 != parlnum
-      if closing_paren
+      if closing_paren && closing_paren_pos > scol
         return indent(parlnum)
       else
         let lastindent = match(getline(a:lnum - 1), '\S')
