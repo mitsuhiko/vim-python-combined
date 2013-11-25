@@ -102,18 +102,6 @@ function! GetPythonPEPIndent(lnum)
     return 0
   endif
 
-  " If we're in a triple quoted string we don't want to do any fancy
-  " indentation.
-  call cursor(a:lnum, scol)
-  let stringnum = searchpair('"""', '', '""""', 'bW')
-  if stringnum <= 0
-    call cursor(a:lnum, scol)
-    stringnum = searchpair("'''", '', "'''", 'bW')
-  endif
-  if stringnum > 0
-    return indent(a:lnum)
-  endif
-
   " If we can find an open parenthesis/bracket/brace, line up with it.
   call cursor(a:lnum, 1)
   let parlnum = s:SearchParensPair()
@@ -143,6 +131,16 @@ function! GetPythonPEPIndent(lnum)
         endif
       endif
     endif
+
+    " If we line up with an opening column there is a special case
+    " we want to handle: a docstring as argument.  In that case we
+    " don't want to line up with the paren but with the statement
+    " imagine foo(doc=""" as example
+    echo getline(parlnum)
+    if match(getline(parlnum), '\("""\|' . "'''" . '\)\s*$') != -1
+      return indent(parlnum)
+    endif
+
     return parcol
   endif
 
