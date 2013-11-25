@@ -102,6 +102,18 @@ function! GetPythonPEPIndent(lnum)
     return 0
   endif
 
+  " If we're in a triple quoted string we don't want to do any fancy
+  " indentation.
+  call cursor(a:lnum, scol)
+  let stringnum = searchpair('"""', '', '""""', 'bW')
+  if stringnum <= 0
+    call cursor(a:lnum, scol)
+    stringnum = searchpair("'''", '', "'''", 'bW')
+  endif
+  if stringnum > 0
+    return indent(a:lnum)
+  endif
+
   " If we can find an open parenthesis/bracket/brace, line up with it.
   call cursor(a:lnum, 1)
   let parlnum = s:SearchParensPair()
